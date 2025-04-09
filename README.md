@@ -1,7 +1,5 @@
 # 🌦️ Weather Dashboard (React.js)
 
-**Live Demo:** [https://weather-dashboard-react.vercel.app](https://weather-dashboard-react.vercel.app)
-
 ## 📌 Project Overview
 A simple and responsive Weather Dashboard built using React.js. Users can search for any city and view its current weather information. The data is fetched in real-time from the OpenWeatherMap API.
 
