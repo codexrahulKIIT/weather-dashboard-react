@@ -4,29 +4,14 @@ import Clock from "react-live-clock";
 import Forcast from "./forcast";
 import loader from "./images/WeatherIcons.gif";
 import ReactAnimatedWeather from "react-animated-weather";
+
 const dateBuilder = (d) => {
   let months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
   ];
   let days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
   ];
 
   let day = days[d.getDay()];
@@ -36,11 +21,13 @@ const dateBuilder = (d) => {
 
   return `${day}, ${date} ${month} ${year}`;
 };
+
 const defaults = {
   color: "white",
   size: 112,
   animate: true,
 };
+
 class Weather extends React.Component {
   state = {
     lat: undefined,
@@ -61,12 +48,10 @@ class Weather extends React.Component {
   componentDidMount() {
     if (navigator.geolocation) {
       this.getPosition()
-        //If user allow location service then will fetch data & send it to get-weather function.
         .then((position) => {
           this.getWeather(position.coords.latitude, position.coords.longitude);
         })
-        .catch((err) => {
-          //If user denied location service then standard location weather will le shown on basis of latitude & latitude.
+        .catch(() => {
           this.getWeather(28.67, 77.22);
           alert(
             "You have disabled location service. Allow 'This APP' to access your location. Your current location will be used for calculating Real time weather."
@@ -86,21 +71,12 @@ class Weather extends React.Component {
     clearInterval(this.timerID);
   }
 
-  // tick = () => {
-  //   this.getPosition()
-  //   .then((position) => {
-  //     this.getWeather(position.coords.latitude, position.coords.longitude)
-  //   })
-  //   .catch((err) => {
-  //     this.setState({ errorMessage: err.message });
-  //   });
-  // }
-
   getPosition = (options) => {
     return new Promise(function (resolve, reject) {
       navigator.geolocation.getCurrentPosition(resolve, reject, options);
     });
   };
+
   getWeather = async (lat, lon) => {
     const api_call = await fetch(
       `${apiKeys.base}weather?lat=${lat}&lon=${lon}&units=metric&APPID=${apiKeys.key}`
@@ -115,11 +91,9 @@ class Weather extends React.Component {
       humidity: data.main.humidity,
       main: data.weather[0].main,
       country: data.sys.country,
-      // sunrise: this.getTimeFromUnixTimeStamp(data.sys.sunrise),
-
-      // sunset: this.getTimeFromUnixTimeStamp(data.sys.sunset),
     });
-    switch (this.state.main) {
+
+    switch (data.weather[0].main) {
       case "Haze":
         this.setState({ icon: "CLEAR_DAY" });
         break;
@@ -162,7 +136,6 @@ class Weather extends React.Component {
               <h3>{this.state.country}</h3>
             </div>
             <div className="mb-icon">
-              {" "}
               <ReactAnimatedWeather
                 icon={this.state.icon}
                 color={defaults.color}
@@ -183,8 +156,6 @@ class Weather extends React.Component {
                 <p>
                   {this.state.temperatureC}°<span>C</span>
                 </p>
-                {/* <span className="slash">/</span>
-                {this.state.temperatureF} &deg;F */}
               </div>
             </div>
           </div>
@@ -194,13 +165,17 @@ class Weather extends React.Component {
     } else {
       return (
         <React.Fragment>
-          <img src={loader} style={{ width: "50%", WebkitUserDrag: "none" }} />
+          <img
+            src={loader}
+            alt="Loading..."
+            style={{ width: "50%", WebkitUserDrag: "none" }}
+          />
           <h3 style={{ color: "white", fontSize: "22px", fontWeight: "600" }}>
             Detecting your location
           </h3>
           <h3 style={{ color: "white", marginTop: "10px" }}>
-            Your current location wil be displayed on the App <br></br> & used
-            for calculating Real time weather.
+            Your current location will be displayed on the App <br />
+            & used for calculating Real time weather.
           </h3>
         </React.Fragment>
       );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import apiKeys from "./apiKeys";
 import ReactAnimatedWeather from "react-animated-weather";
@@ -12,26 +12,20 @@ function Forcast(props) {
     axios
       .get(
         `${apiKeys.base}weather?q=${
-          city != "[object Object]" ? city : query
+          city !== "[object Object]" ? city : query
         }&units=metric&APPID=${apiKeys.key}`
       )
       .then((response) => {
         setWeather(response.data);
         setQuery("");
+        setError("");
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(() => {
         setWeather("");
         setQuery("");
-        setError({ message: "Not Found", query: query });
+        setError({ message: "Not Found", query });
       });
   };
-  function checkTime(i) {
-    if (i < 10) {
-      i = "0" + i;
-    } // add zero in front of numbers < 10
-    return i;
-  }
 
   const defaults = {
     color: "white",
@@ -64,17 +58,17 @@ function Forcast(props) {
             value={query}
           />
           <div className="img-box">
-            {" "}
             <img
               src="https://images.avishkaar.cc/workflow/newhp/search-white.png"
-              onClick={search}
+              alt="Search"
+              onClick={() => search(query)}
+              style={{ cursor: "pointer" }}
             />
           </div>
         </div>
         <ul>
-          {typeof weather.main != "undefined" ? (
+          {typeof weather.main !== "undefined" ? (
             <div>
-              {" "}
               <li className="cityHead">
                 <p>
                   {weather.name}, {weather.sys.country}
@@ -82,12 +76,13 @@ function Forcast(props) {
                 <img
                   className="temp"
                   src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+                  alt="Weather icon"
                 />
               </li>
               <li>
                 Temperature{" "}
                 <span className="temp">
-                  {Math.round(weather.main.temp)}°c ({weather.weather[0].main})
+                  {Math.round(weather.main.temp)}°C ({weather.weather[0].main})
                 </span>
               </li>
               <li>
@@ -119,4 +114,5 @@ function Forcast(props) {
     </div>
   );
 }
+
 export default Forcast;
